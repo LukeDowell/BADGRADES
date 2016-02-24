@@ -1,7 +1,6 @@
 
 .idea/
-./node_modules/
-./public/bower_components/
+public/bower_components/
 *.iml
 
 # Logs
