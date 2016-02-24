@@ -6,10 +6,13 @@
     <!--bower:css-->
     <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
     <!--endbower-->
+    <!-- inject:css -->
+    <!-- endinject -->
 </head>
-<body>
+<body ng-app="badgrades">
 
-    <h1>BADGRADES</h1>
+    <div ui-view="navbar"></div>
+    <div ui-view="content"></div>
 
     <!--bower:js-->
     <script src="bower_components/angular/angular.js"></script>
@@ -17,9 +20,14 @@
     <script src="bower_components/angular-aria/angular-aria.js"></script>
     <script src="bower_components/angular-messages/angular-messages.js"></script>
     <script src="bower_components/angular-material/angular-material.js"></script>
-    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <!--endbower-->
-    <!--wiredep-->
-    <!--endwiredep-->
+    <!-- inject:js -->
+    <script src="scripts/app/app.js"></script>
+    <script src="scripts/components/navbar/navbar.controller.js"></script>
+    <script src="scripts/app/main/main.js"></script>
+    <script src="scripts/app/main/main.controller.js"></script>
+    <script src="scripts/app/app.constants.js"></script>
+    <!-- endinject -->
 </body>
 </html>
