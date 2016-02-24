@@ -5,5 +5,5 @@
 
 angular.module('badgrades')
     .controller('NavbarController', function() {
-        console.log("NavbarController Loaded");
+
     });

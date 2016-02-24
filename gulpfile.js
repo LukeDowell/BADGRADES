@@ -14,6 +14,15 @@ var paths = {
 };
 
 gulp.task('watch', function() {
+    gulp.watch(paths.scripts, ['scripts']);
+    gulp.watch(paths.styles, ['styles']);
+});
+
+gulp.task('scripts', function() {
+
+});
+
+gulp.task('styles', function() {
 
 });
 
