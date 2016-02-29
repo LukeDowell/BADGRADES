@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
     <!--endbower-->
     <!-- inject:css -->
+    <link rel="stylesheet" href="stylesheets/style.css">
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css">
     <!-- endinject -->
 </head>
 <body ng-app="badgrades">
@@ -25,15 +27,14 @@
     <!--endbower-->
     <!-- inject:js -->
     <script src="scripts/vendors/pixijs/pixi.js"></script>
-    <script src="scripts/vendors/physicsjs/physicsjs-full.js"></script>
-    <script src="scripts/vendors/box2d/box2d.min.js"></script>
+    <script src="scripts/vendors/box2d/box2d-2.3.1.min.js"></script>
     <script src="scripts/app/app.js"></script>
-    <script src="scripts/components/physics/world.service.js"></script>
-    <script src="scripts/components/physics/ticker.service.js"></script>
-    <script src="scripts/components/physics/renderer.service.js"></script>
+    <script src="scripts/components/pixijs/renderer.service.js"></script>
     <script src="scripts/components/navbar/navbar.controller.js"></script>
+    <script src="scripts/components/box2d/world.service.js"></script>
     <script src="scripts/components/blackboard/Chain.js"></script>
     <script src="scripts/components/blackboard/Blackboard.js"></script>
+    <script src="scripts/components/blackboard/directive/blackboard.directive.js"></script>
     <script src="scripts/app/main/main.js"></script>
     <script src="scripts/app/main/main.controller.js"></script>
     <script src="scripts/app/app.constants.js"></script>

@@ -18,7 +18,4 @@ angular.module('badgrades', ['ngAria', 'ui.router', 'ngMessages', 'ngMaterial'])
 
                 }
             })
-    }])
-
-    // TODO Where else to put
-    .value("Physics", Physics);
+    }]);
