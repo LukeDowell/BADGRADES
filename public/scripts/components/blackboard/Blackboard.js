@@ -1,5 +1,8 @@
 /**
  * Created by Luke on 2/26/2016.
+ *
+ * http://blog.sethladd.com/2011/09/box2d-javascript-example-walkthrough.html
+ *
  */
 angular.module('badgrades')
     .factory('Blackboard', function(World, PixiRenderer) {
@@ -63,6 +66,17 @@ angular.module('badgrades')
 
             this.setupHandlers()
                 .populateWorld();
+
+            var debugDraw = new Box2D.Dynamics.b2DebugDraw();
+            debugDraw.SetSprite(document.getElementById('canvas').getContext('2d'));
+            debugDraw.SetDrawScale(1);
+            debugDraw.SetFillAlpha(1);
+            debugDraw.SetLineThickness(2.0);
+            debugDraw.SetFlags(Box2D.Dynamics.b2DebugDraw.e_shapeBit | Box2D.Dynamics.b2DebugDraw.e_jointBit);
+
+            console.log(debugDraw);
+
+            World.SetDebugDraw(debugDraw);
         };
 
         /**
@@ -79,23 +93,21 @@ angular.module('badgrades')
          */
         proto.populateWorld = function() {
 
-            // Make the ground
-            var shape = new Box2D.b2EdgeShape();
-            shape.Set(new Box2D.b2Vec2(-600.0, 0.0), new Box2D.b2Vec2(600, 0.0));
+            var fixDef = new Box2D.Dynamics.b2FixtureDef();
+            fixDef.density = 1.0;
+            fixDef.friction = 0.5;
+            fixDef.restitution = 0.2;
 
-            var ground = World.CreateBody(new Box2D.b2BodyDef());
-            ground.CreateFixture(shape, 0.0);
+            var bodyDef = new Box2D.Dynamics.b2BodyDef();
+            bodyDef.type = Box2D.Dynamics.b2Body.b2_staticBody;
 
-            shape = new Box2D.b2PolygonShape();
-            shape.SetAsBox(0.1, 1.0);
+            bodyDef.position.x = 600;
+            bodyDef.position.y = 775;
 
-            var fixtureDef = new Box2D.b2FixtureDef();
-            fixtureDef.set_shape(shape);
-            fixtureDef.set_density(20.0);
-            fixtureDef.set_friction(0.1);
+            fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape();
+            fixDef.shape.SetAsBox(600, 25);
 
-            var bodyDef = new Box2D.b2BodyDef();
-            bodyDef.set_type(Module)
+            World.CreateBody(bodyDef).CreateFixture(fixDef);
 
             return this;
         };
@@ -103,14 +115,21 @@ angular.module('badgrades')
         /**
          * The update/render loop
          */
-        proto.update = function() {
-            //TODO apparently this is slow
-            var boundCallback = this.update.bind(this);
-            requestAnimationFrame(boundCallback);
+        proto.update = function( tStamp ) {
 
-            // Framerate, ? , ?
-            World.Step(1 / 60, 3, 3);
+
+            World.Step(
+                1 / 60, //frame rate
+                10,     //velocity iterations
+                10);    //position iterations
+            World.DrawDebugData();
+            World.ClearForces();
+
             this.renderer.render();
+
+
+            var boundCallback = this.update.bind(this);
+            window.requestAnimationFrame( boundCallback );
         };
 
 

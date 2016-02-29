@@ -5,8 +5,10 @@
 angular.module('badgrades')
     .factory('World', function() {
 
-        var gravity = new Box2D.b2Vec2(0.0, -10.0);
-        var world = new Box2D.b2World(gravity);
+        console.log(Box2D);
+
+        var gravity = new Box2D.Common.Math.b2Vec2(0.0, -10.0);
+        var world = new Box2D.Dynamics.b2World(gravity, true); // Allow sleep
 
         return world;
     });
