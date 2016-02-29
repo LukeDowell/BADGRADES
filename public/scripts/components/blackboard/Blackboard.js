@@ -18,6 +18,15 @@ angular.module('badgrades')
             console.log(scope, element, attributes);
 
             /**
+             * Used to convert between physical and visual units for
+             * box2d. 30 is the domain standard, and implies that something
+             * of 3 pixels would be very small, while something of 300 pixels would
+             * be very big.
+             * @type {number}
+             */
+            this.scale = 30;
+
+            /**
              * TODO what is this
              */
             this.scope = scope;
@@ -69,7 +78,7 @@ angular.module('badgrades')
 
             var debugDraw = new Box2D.Dynamics.b2DebugDraw();
             debugDraw.SetSprite(document.getElementById('canvas').getContext('2d'));
-            debugDraw.SetDrawScale(1);
+            debugDraw.SetDrawScale(this.scale);
             debugDraw.SetFillAlpha(1);
             debugDraw.SetLineThickness(2.0);
             debugDraw.SetFlags(Box2D.Dynamics.b2DebugDraw.e_shapeBit | Box2D.Dynamics.b2DebugDraw.e_jointBit);
