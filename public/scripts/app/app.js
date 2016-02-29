@@ -20,6 +20,5 @@ angular.module('badgrades', ['ngAria', 'ui.router', 'ngMessages', 'ngMaterial'])
             })
     }])
 
-    .run(function(ENV, VERSION) {
-        console.log("Angular Started! " , ENV , VERSION);
-    });
+    // TODO Where else to put
+    .value("Physics", Physics);

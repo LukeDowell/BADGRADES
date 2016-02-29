@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>BadGrades</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
     <!--bower:css-->
     <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
     <!--endbower-->
@@ -21,16 +22,20 @@
     <script src="bower_components/angular-messages/angular-messages.js"></script>
     <script src="bower_components/angular-material/angular-material.js"></script>
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="bower_components/pixi/pixi.js"></script>
     <!--endbower-->
     <!-- inject:js -->
+    <script src="scripts/vendors/pixijs/pixi.js"></script>
+    <script src="scripts/vendors/physicsjs/physicsjs-full.js"></script>
+    <script src="scripts/vendors/box2d/box2d.min.js"></script>
     <script src="scripts/app/app.js"></script>
+    <script src="scripts/components/physics/world.service.js"></script>
+    <script src="scripts/components/physics/ticker.service.js"></script>
+    <script src="scripts/components/physics/renderer.service.js"></script>
     <script src="scripts/components/navbar/navbar.controller.js"></script>
-    <script src="scripts/components/blackboard/blackboard.js"></script>
+    <script src="scripts/components/blackboard/Chain.js"></script>
+    <script src="scripts/components/blackboard/Blackboard.js"></script>
     <script src="scripts/app/main/main.js"></script>
     <script src="scripts/app/main/main.controller.js"></script>
-    <script src="scripts/app/blackboard/blackboard.js"></script>
-    <script src="scripts/app/blackboard/blackboard.controller.js"></script>
     <script src="scripts/app/app.constants.js"></script>
     <!-- endinject -->
 </body>
