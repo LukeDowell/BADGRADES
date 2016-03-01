@@ -57,8 +57,6 @@ angular.module('badgrades')
 
             var debugDraw = new Box2D.Dynamics.b2DebugDraw();
 
-            this.renderer.context.save();
-
             debugDraw.SetSprite(this.renderer.context);
             debugDraw.SetDrawScale(SCALE);
             debugDraw.SetFillAlpha(0.2);
@@ -66,12 +64,18 @@ angular.module('badgrades')
             debugDraw.SetFlags(Box2D.Dynamics.b2DebugDraw.e_shapeBit | Box2D.Dynamics.b2DebugDraw.e_jointBit);
 
             World.SetDebugDraw(debugDraw);
+
         };
 
         /**
-         *
+         *  Connect the world to the renderer's event callbacks
          */
         proto.setupHandlers = function() {
+
+            this.renderer.addEventListener('mouseup', World.onMouseUp.bind(World));
+            this.renderer.addEventListener('mousedown', World.onMouseDown.bind(World));
+            this.renderer.addEventListener('mousemove', World.onMouseMove.bind(World));
+
             return this;
         };
 
@@ -103,6 +107,8 @@ angular.module('badgrades')
             var ceiling = World.CreateBody(bodyDef);
             ceiling.CreateFixture(fixDef);
 
+            World.bodies.push(ceiling);
+            //World.actors.push({});
 
             ////////////////
             // BLACKBOARD //
@@ -114,78 +120,75 @@ angular.module('badgrades')
             bodyDef.position.y = 300 / SCALE;
             bodyDef.linearDamping = 0.3;
 
+            fixDef = new Box2D.Dynamics.b2FixtureDef();
+            fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape();
             fixDef.shape.SetAsBox(700 / 2 / SCALE, 400 / 2 / SCALE);
             fixDef.density = 10;
+
             var blackboardBody = World.CreateBody(bodyDef);
             blackboardBody.CreateFixture(fixDef);
 
-
+            // Blackboard Sprite
             var blackboardSprite = new PIXI.Sprite.fromImage('media/images/blackboard.jpg');
 
             blackboardSprite.position.x = blackboardBody.GetPosition().x * SCALE;
             blackboardSprite.position.y = blackboardBody.GetPosition().y * SCALE;
-
             blackboardSprite.anchor.x = 0.5;
             blackboardSprite.anchor.y = 0.5;
-
             blackboardSprite.width = 700;
             blackboardSprite.height = 400;
 
             World.bodies.push(blackboardBody);
-            World.actors.push(blackboardSprite);
+            //World.actors.push(blackboardSprite);
 
-            console.log(blackboardBody, blackboardSprite);
-
-            this.renderer.stage.addChild(blackboardSprite);
+            //this.renderer.stage.addChild(blackboardSprite);
 
 
             // Chainz
-            // Left
             var leftChainCeilingAnchor = new Box2D.Common.Math.b2Vec2(-300 / SCALE, 25 / SCALE);
             var leftChainBoardAnchor = new Box2D.Common.Math.b2Vec2(300 / SCALE, 110 / SCALE);
-            //var leftChainBoardAnchor = new Box2D.Common.Math.b2Vec2(-360 / SCALE, -210 / SCALE);
             Chain(300, 50, ceiling, leftChainCeilingAnchor, blackboardBody, leftChainBoardAnchor);
 
             var rightChainCeilingAnchor = new Box2D.Common.Math.b2Vec2(300 / SCALE, 25 / SCALE);
             var rightChainBoardAnchor = new Box2D.Common.Math.b2Vec2(900 / SCALE, 110 / SCALE);
-            //var leftChainBoardAnchor = new Box2D.Common.Math.b2Vec2(-360 / SCALE, -210 / SCALE);
             Chain(300, 50, ceiling, rightChainCeilingAnchor, blackboardBody, rightChainBoardAnchor);
-
-            //// Right
-            //var leftChainCeilingAnchor = new Box2D.Common.Math.b2Vec2(-300 / SCALE, -12.5 / SCALE);
-            //var leftChainBoardAnchor = new Box2D.Common.Math.b2Vec2(-350 / SCALE, -200 / SCALE);
-            //Chain(ceiling, leftChainCeilingAnchor, blackboardBody, leftChainBoardAnchor);
-
-
-
 
             return this;
         };
 
         /**
-         * The update/render loop
+         *
+         * @param tStamp
          */
         proto.update = function( tStamp ) {
+            var boundCallback = this.update.bind(this);
+            window.requestAnimationFrame( boundCallback );
 
             World.Step(
                 1 / 60, //frame rate
                 10,     //velocity iterations
                 10);    //position iterations
 
+            // Update actors
+            for(var i = 0; i < World.actors.length; i++) {
+                var actor = World.actors[i];
+                var body = World.bodies[i];
+
+                var bodyPos = body.GetPosition();
+
+                actor.position.x = bodyPos.x * SCALE;
+                actor.position.y = bodyPos.y * SCALE;
+                actor.rotation = body.GetAngle();
+
+            }
+
             World.DrawDebugData();
             World.ClearForces();
-
 
             this.renderer.context.save();
             this.renderer.render();
             this.renderer.context.restore();
-
-
-            // TODO read that this is super slow
-            var boundCallback = this.update.bind(this);
-            window.requestAnimationFrame( boundCallback );
         };
-
 
         return Blackboard;
     });

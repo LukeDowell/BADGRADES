@@ -2,14 +2,14 @@
  * Created by ldowell on 2/29/16.
  */
 angular.module('badgrades')
-    .factory('PixiRenderer', function(World) {
+    .factory('PixiRenderer', function() {
 
         /**
          * Creates a new PIXIJS renderer. An appropriate drawing
          * medium (canvas / webgl) is appended into the provided element
          *
-         * @param canvasId
-         *      The parent element for this renderer's medium
+         * @param element
+         *      The parent element for this renderer's view
          * @constructor
          */
         var PixiRenderer = function(element) {
@@ -57,38 +57,104 @@ angular.module('badgrades')
              */
             this.context = undefined;
 
+            /**
+             * idk if this will work
+             * @type {*[]}
+             */
+            this.eventListeners = {};
+
             this.init();
         };
 
         var proto = PixiRenderer.prototype;
 
         proto.init = function() {
-
             this.stage = new PIXI.Container();
             this.renderer = new PIXI.autoDetectRenderer(this.WIDTH, this.HEIGHT, this.rendererOptions, true);
             this.container.append(this.renderer.view);
             this.context = this.renderer.view.getContext('2d');
 
-            console.log("PIXI JS RENDERER", this.renderer);
+            this.setupHandlers();
 
         };
 
-        proto.render = function() {
-            for(var i = 0; i < World.actors.length; i++) {
-                var actor = World.actors[i];
-                var body = World.bodies[i];
+        /**
+         * Event router
+         * @returns {proto}
+         */
+        proto.setupHandlers = function() {
 
-                var bodyPos = body.GetPosition();
+            angular.element(this.renderer.view).on('click', function(event) {
+                this.notifyListeners('click', event);
+            }.bind(this));
 
-                actor.position.x = bodyPos.x * World.SCALE;
-                actor.position.y = bodyPos.y * World.SCALE;
-                actor.rotation = body.GetAngle();
+            angular.element(this.renderer.view).on('mousemove', function(event) {
+                this.notifyListeners('mousemove', event);
+            }.bind(this));
 
-                //console.log("RENDERING ACTOR: " , actor , " FROM BODY " , body);
+            angular.element(this.renderer.view).on('mousedown', function(event) {
+                this.notifyListeners('mousedown', event);
+            }.bind(this));
 
+            angular.element(this.renderer.view).on('mouseup', function(event) {
+                this.notifyListeners('mouseup', event);
+            }.bind(this));
+
+            angular.element(this.renderer.view).on('mouseenter', function(event) {
+                this.notifyListeners('mouseenter', event);
+            }.bind(this));
+
+            angular.element(this.renderer.view).on('mouseleave', function(event) {
+                this.notifyListeners('mouseleave', event);
+            }.bind(this));
+
+            return this;
+        };
+
+        /**
+         *
+         * @param namespace
+         *      A string denoting the type of event to listen to. Available
+         *      values:
+         *      'click', 'mousedown', 'mouseup', 'mouseenter', 'mouseleave',
+         *      'mousemove'
+         *
+         * @param callback
+         *      The callback function to execute when an event triggers
+         */
+        proto.addEventListener = function(namespace, callback) {
+            if(!this.eventListeners[namespace]) {
+                this.eventListeners[namespace] = [];
             }
+            this.eventListeners[namespace].push(callback);
+        };
+
+        /**
+         *
+         * @param namespace
+         * @param event
+         */
+        proto.notifyListeners = function( namespace, event ) {
+            var listeners = this.eventListeners[namespace];
+            if(listeners && listeners.length > 0) {
+                for(var i = 0; i < listeners.length; i++) {
+                    listeners[i](event);
+                }
+            }
+        };
+
+        /**
+         *
+         */
+        proto.render = function() {
             this.renderer.render(this.stage);
         };
+
+        //////////////////////
+        // EVENT HANDLERS
+        //////////////////////
+
+
 
         ////////////////////////////////
         // BOX2D DEBUG DRAW FUNCTIONS //

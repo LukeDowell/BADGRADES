@@ -38,6 +38,12 @@ angular.module('badgrades')
              */
             this.bodies = [];
 
+            /**
+             * Whether or not this world has mouse joints enabled
+             * @type {boolean}
+             */
+            this.interactive = true;
+
             this.init();
         };
 
@@ -91,6 +97,109 @@ angular.module('badgrades')
             var body = this.CreateBody(bodyDef);
             body.CreateFixture(fixDef);
 
+            return body;
+        };
+
+        //////////////////////////
+        // MOUSE JOINT SHIT
+        //////////////////////////
+        // TODO probably should be in blackboard.js
+        // http://www.binarytides.com/mouse-joint-box2d-javascript/
+
+        var mouseJoint = undefined;
+        var mousePressed = false;
+
+        proto.onMouseMove = function( event ) {
+            var x = event.pageX / this.SCALE;
+            var y = event.pageY / this.SCALE;
+
+            var point = new Box2D.Common.Math.b2Vec2(x, y);
+
+            if(mousePressed && !mouseJoint) {
+                var body = this.getBodyAtMouse(x, y);
+
+                if(body) {
+                    var jointDef = this.createMouseJointDef(this.bodies[0], body, point);
+                    mouseJoint = this.CreateJoint(jointDef);
+                    body.SetAwake(true);
+                }
+            }
+
+            if(mouseJoint) {
+                console.log(mouseJoint);
+                console.log(event);
+                mouseJoint.SetTarget(point);
+            }
+        };
+
+        proto.onMouseUp = function( event ) {
+            mousePressed = false;
+
+            if(mouseJoint) {
+                this.DestroyJoint(mouseJoint);
+                mouseJoint = false;
+            }
+        };
+
+        proto.onMouseDown = function( event ) {
+            mousePressed = true;
+        };
+
+        /**
+         * @param ground
+         * @param body
+         * @param target
+         */
+        proto.createMouseJointDef = function(ground, body, target) {
+            var mouseJointDef = new Box2D.Dynamics.Joints.b2MouseJointDef();
+
+            mouseJointDef.bodyA = ground;
+            mouseJointDef.bodyB = body;
+            mouseJointDef.target = target;
+
+            mouseJointDef.collideConnected = true;
+            mouseJointDef.maxForce = 1000 * body.GetMass();
+            mouseJointDef.dampingRatio = 0;
+
+            return mouseJointDef;
+        };
+
+        /**
+         *
+         * @param x
+         * @param y
+         */
+        proto.getBodyAtMouse = function(x, y) {
+            var mouse_p = new Box2D.Common.Math.b2Vec2(x, y);
+            var aabb = new Box2D.Collision.b2AABB();
+
+            aabb.lowerBound.Set(x - 0.001, y - 0.001);
+            aabb.upperBound.Set(x + 0.001, y + 0.001);
+
+            var body = null;
+
+            // Query the world for overlapping shapes.
+            function GetBodyCallback(fixture)
+            {
+                var shape = fixture.GetShape();
+
+                if (fixture.GetBody().GetType() != Box2D.Dynamics.b2Body.b2_staticBody)
+                {
+                    var inside = shape.TestPoint(fixture.GetBody().GetTransform(), mouse_p);
+
+                    if (inside)
+                    {
+                        body = fixture.GetBody();
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            this.QueryAABB(GetBodyCallback, aabb);
+
+            console.log(body);
             return body;
         };
 
