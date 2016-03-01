@@ -23,7 +23,7 @@ angular.module('badgrades')
                 'antialias': true,
                 'autoResize': false,
                 'transparent': false,
-                'resolution': 2,
+                //'resolution': 2,
                 //'width': 0,
                 //'height': 0,
                 'view': document.getElementById(canvasId)

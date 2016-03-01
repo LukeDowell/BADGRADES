@@ -5,7 +5,7 @@
  *
  */
 angular.module('badgrades')
-    .factory('Blackboard', function(World, PixiRenderer) {
+    .factory('Blackboard', function(World, PixiRenderer, Chain) {
 
         /**
          * TODO: Documentation
@@ -101,8 +101,7 @@ angular.module('badgrades')
             // Top
             bodyDef.position.x = 600;
             bodyDef.position.y = 25;
-            World.bodies.push(World.CreateBody(bodyDef).CreateFixture(fixDef));
-
+            var ceiling = World.CreateBody(bodyDef).CreateFixture(fixDef);
 
             // Left
             fixDef.shape.SetAsBox(25, 600);
@@ -116,7 +115,7 @@ angular.module('badgrades')
             bodyDef.position.y = 400;
             World.bodies.push(World.CreateBody(bodyDef).CreateFixture(fixDef));
 
-
+            Chain(300, 200, 10, 40, 20);
 
 
             return this;
