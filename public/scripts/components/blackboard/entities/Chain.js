@@ -5,16 +5,12 @@ angular.module('badgrades')
     .factory('Chain', function(World) {
 
         var SCALE = World.SCALE;
+        var numLinks = 12;
+        var linkLength = 20;
+        var linkWidth = 10;
 
-        var Chain = function(x, y, numLinks, linkLength, linkWidth, end) {
+        var Chain = function(x, y, startBody, relativeStartAnchor, endBody, relativeEndAnchor) {
 
-            if(!linkLength) {
-                linkLength = 20;
-            }
-
-            if(!linkWidth) {
-                linkWidth = 10;
-            }
 
             // Chain segment
             var bodyDef = new Box2D.Dynamics.b2BodyDef();
@@ -30,12 +26,11 @@ angular.module('badgrades')
             fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape();
             fixDef.shape.SetAsBox(linkWidth / 2 / SCALE, linkLength / 2 / SCALE);
             fixDef.density = 100;
-            fixDef.friction = 0.5;
-            fixDef.restitution = 0.2;
+            fixDef.friction = 1;
+            fixDef.restitution = 2;
 
             // Create the first body
-            var link = World.CreateBody(bodyDef);
-            link.CreateFixture(fixDef);
+            var link = startBody;
 
             // Create the chain
             for(var i = 1; i < numLinks; i++) {
@@ -49,9 +44,20 @@ angular.module('badgrades')
 
                 var jointVector = new Box2D.Common.Math.b2Vec2(x / SCALE, (yPos - linkLength) / SCALE);
                 revoluteJoint.Initialize(link, body, jointVector);
+
+                if(i === 1) {
+                    revoluteJoint.localAnchorA = relativeStartAnchor;
+                }
+
                 World.CreateJoint(revoluteJoint);
                 link = body;
             }
+
+            revoluteJoint.Initialize(link, endBody, relativeEndAnchor);
+            revoluteJoint.localAnchorA = new Box2D.Common.Math.b2Vec2(0, linkLength / SCALE);
+            World.CreateJoint(revoluteJoint);
+
+            // Last body
         };
 
         return Chain;

@@ -85,9 +85,9 @@ angular.module('badgrades')
             ////////////
 
             var fixDef = new Box2D.Dynamics.b2FixtureDef();
-            fixDef.density = 1.0;
-            fixDef.friction = 0.5;
-            fixDef.restitution = 0.2;
+            fixDef.density = 200;
+            fixDef.friction = 25;
+            fixDef.restitution = 10;
 
             var bodyDef = new Box2D.Dynamics.b2BodyDef();
             bodyDef.type = Box2D.Dynamics.b2Body.b2_staticBody;
@@ -95,38 +95,47 @@ angular.module('badgrades')
             fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape();
             fixDef.shape.SetAsBox(600 / SCALE, 25 / SCALE);
 
-            // Bottom
-            bodyDef.position.x = 600 / SCALE;
-            bodyDef.position.y = 775 / SCALE;
-            World.CreateBody(bodyDef).CreateFixture(fixDef);
-
             // Top
             bodyDef.position.x = 600 / SCALE;
             bodyDef.position.y = 25 / SCALE;
-            World.CreateBody(bodyDef).CreateFixture(fixDef);
+            var ceiling = World.CreateBody(bodyDef);
+            ceiling.CreateFixture(fixDef);
 
+
+            ////////////////
+            // NOT GROUND //
+            ////////////////
+
+            // Blackboard
+            bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
+            bodyDef.position.x = 600 / SCALE;
+            bodyDef.position.y = 300 / SCALE;
+            bodyDef.linearDamping = 0.25;
+
+            fixDef.shape.SetAsBox(700 / 2 / SCALE, 400 / 2 / SCALE);
+            fixDef.density = 10;
+            var blackboardBody = World.CreateBody(bodyDef);
+            blackboardBody.CreateFixture(fixDef);
+
+            // Chainz
             // Left
-            fixDef.shape.SetAsBox(25 / SCALE, 600 / SCALE);
+            var leftChainCeilingAnchor = new Box2D.Common.Math.b2Vec2(-300 / SCALE, 25 / SCALE);
+            var leftChainBoardAnchor = new Box2D.Common.Math.b2Vec2(300 / SCALE, 110 / SCALE);
+            //var leftChainBoardAnchor = new Box2D.Common.Math.b2Vec2(-360 / SCALE, -210 / SCALE);
+            Chain(300, 50, ceiling, leftChainCeilingAnchor, blackboardBody, leftChainBoardAnchor);
 
-            bodyDef.position.x = 25 / SCALE;
-            bodyDef.position.y = 400 / SCALE;
-            World.CreateBody(bodyDef).CreateFixture(fixDef);
+            var rightChainCeilingAnchor = new Box2D.Common.Math.b2Vec2(300 / SCALE, 25 / SCALE);
+            var rightChainBoardAnchor = new Box2D.Common.Math.b2Vec2(900 / SCALE, 110 / SCALE);
+            //var leftChainBoardAnchor = new Box2D.Common.Math.b2Vec2(-360 / SCALE, -210 / SCALE);
+            Chain(300, 50, ceiling, rightChainCeilingAnchor, blackboardBody, rightChainBoardAnchor);
 
-            // Right
-            bodyDef.position.x = 1175 / SCALE;
-            bodyDef.position.y = 400 / SCALE;
-            World.CreateBody(bodyDef).CreateFixture(fixDef);
+            //// Right
+            //var leftChainCeilingAnchor = new Box2D.Common.Math.b2Vec2(-300 / SCALE, -12.5 / SCALE);
+            //var leftChainBoardAnchor = new Box2D.Common.Math.b2Vec2(-350 / SCALE, -200 / SCALE);
+            //Chain(ceiling, leftChainCeilingAnchor, blackboardBody, leftChainBoardAnchor);
 
-            Chain(300,
-                200,
-                10,
-                20,
-                10);
 
-            World.createBox(400 / SCALE,
-                400 / SCALE,
-                50 / SCALE,
-                50 / SCALE);
+
 
             return this;
         };

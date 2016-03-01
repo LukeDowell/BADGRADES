@@ -8,11 +8,14 @@ angular.module('badgrades')
          * Creates a new PIXIJS renderer. An appropriate drawing
          * medium (canvas / webgl) is appended into the provided element
          *
-         * @param element
+         * @param canvasId
          *      The parent element for this renderer's medium
          * @constructor
          */
         var PixiRenderer = function(canvasId) {
+
+            this.WIDTH = 1200;
+            this.HEIGHT = 800;
 
             /**
              * Various PIXIJS renderer options
@@ -51,7 +54,7 @@ angular.module('badgrades')
         proto.init = function() {
 
             this.stage = new PIXI.Container();
-            this.renderer = new PIXI.autoDetectRenderer(1200, 800, this.rendererOptions, true);
+            this.renderer = new PIXI.autoDetectRenderer(this.WIDTH, this.HEIGHT, this.rendererOptions, true);
 
             console.log("PIXI JS RENDERER", this.renderer);
 
