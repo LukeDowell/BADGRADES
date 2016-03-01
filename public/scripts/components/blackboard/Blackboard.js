@@ -128,9 +128,13 @@ angular.module('badgrades')
             blackboardSprite.anchor.x = 0.5;
             blackboardSprite.anchor.y = 0.5;
 
+            blackboardSprite.width = 700;
+            blackboardSprite.height = 400;
 
             World.bodies.push(blackboardBody);
             World.actors.push(blackboardSprite);
+
+            console.log(blackboardBody, blackboardSprite);
 
             this.renderer.stage.addChild(blackboardSprite);
 
