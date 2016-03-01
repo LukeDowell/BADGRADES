@@ -2,7 +2,7 @@
  * Created by ldowell on 2/29/16.
  */
 angular.module('badgrades')
-    .factory('PixiRenderer', function() {
+    .factory('PixiRenderer', function(World) {
 
         /**
          * Creates a new PIXIJS renderer. An appropriate drawing
@@ -12,7 +12,7 @@ angular.module('badgrades')
          *      The parent element for this renderer's medium
          * @constructor
          */
-        var PixiRenderer = function(canvasId) {
+        var PixiRenderer = function(element) {
 
             this.WIDTH = 1200;
             this.HEIGHT = 800;
@@ -25,12 +25,12 @@ angular.module('badgrades')
 
                 'antialias': true,
                 'autoResize': false,
-                'transparent': false,
+                'transparent': true,
+                'clearBeforeRender': false
                 //'resolution': 2,
                 //'width': 0,
                 //'height': 0,
-                'view': document.getElementById(canvasId)
-                //'clearBeforeRender': true,
+                //'view': document.getElementById(canvasId)
                 //'roundPixels': false
             };
 
@@ -46,6 +46,17 @@ angular.module('badgrades')
              */
             this.renderer = undefined;
 
+            /**
+             * Canvas container
+             */
+            this.container = element;
+
+            /**
+             * 2d Canvas Context
+             * @type {undefined}
+             */
+            this.context = undefined;
+
             this.init();
         };
 
@@ -55,12 +66,27 @@ angular.module('badgrades')
 
             this.stage = new PIXI.Container();
             this.renderer = new PIXI.autoDetectRenderer(this.WIDTH, this.HEIGHT, this.rendererOptions, true);
+            this.container.append(this.renderer.view);
+            this.context = this.renderer.view.getContext('2d');
 
             console.log("PIXI JS RENDERER", this.renderer);
 
         };
 
         proto.render = function() {
+            for(var i = 0; i < World.actors.length; i++) {
+                var actor = World.actors[i];
+                var body = World.bodies[i];
+
+                var bodyPos = body.GetPosition();
+
+                actor.position.x = bodyPos.x * World.SCALE;
+                actor.position.y = bodyPos.y * World.SCALE;
+                actor.rotation = body.GetAngle();
+
+                //console.log("RENDERING ACTOR: " , actor , " FROM BODY " , body);
+
+            }
             this.renderer.render(this.stage);
         };
 

@@ -57,7 +57,9 @@ angular.module('badgrades')
 
             var debugDraw = new Box2D.Dynamics.b2DebugDraw();
 
-            debugDraw.SetSprite(document.getElementById('canvas').getContext('2d'));
+            this.renderer.context.save();
+
+            debugDraw.SetSprite(this.renderer.context);
             debugDraw.SetDrawScale(SCALE);
             debugDraw.SetFillAlpha(0.2);
             debugDraw.SetLineThickness(2.0);
@@ -103,19 +105,35 @@ angular.module('badgrades')
 
 
             ////////////////
-            // NOT GROUND //
+            // BLACKBOARD //
             ////////////////
 
             // Blackboard
             bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
             bodyDef.position.x = 600 / SCALE;
             bodyDef.position.y = 300 / SCALE;
-            bodyDef.linearDamping = 0.25;
+            bodyDef.linearDamping = 0.3;
 
             fixDef.shape.SetAsBox(700 / 2 / SCALE, 400 / 2 / SCALE);
             fixDef.density = 10;
             var blackboardBody = World.CreateBody(bodyDef);
             blackboardBody.CreateFixture(fixDef);
+
+
+            var blackboardSprite = new PIXI.Sprite.fromImage('media/images/blackboard.jpg');
+
+            blackboardSprite.position.x = blackboardBody.GetPosition().x * SCALE;
+            blackboardSprite.position.y = blackboardBody.GetPosition().y * SCALE;
+
+            blackboardSprite.anchor.x = 0.5;
+            blackboardSprite.anchor.y = 0.5;
+
+
+            World.bodies.push(blackboardBody);
+            World.actors.push(blackboardSprite);
+
+            this.renderer.stage.addChild(blackboardSprite);
+
 
             // Chainz
             // Left
@@ -152,6 +170,12 @@ angular.module('badgrades')
 
             World.DrawDebugData();
             World.ClearForces();
+
+
+            this.renderer.context.save();
+            this.renderer.render();
+            this.renderer.context.restore();
+
 
             // TODO read that this is super slow
             var boundCallback = this.update.bind(this);

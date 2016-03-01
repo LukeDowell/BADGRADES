@@ -3,7 +3,7 @@
  */
 
 angular.module('badgrades')
-    .factory('World', function(PixiRenderer) {
+    .factory('World', function() {
 
         /* Gravity vector for box2d, can be acquired with World.GetGravity */
         var GRAVITY = new Box2D.Common.Math.b2Vec2(0.0, 20);
