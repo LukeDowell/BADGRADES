@@ -7,6 +7,8 @@
 angular.module('badgrades')
     .factory('Blackboard', function(World, PixiRenderer, Chain) {
 
+        var SCALE = World.SCALE;
+
         /**
          * TODO: Documentation
          * @param scope
@@ -56,8 +58,8 @@ angular.module('badgrades')
             var debugDraw = new Box2D.Dynamics.b2DebugDraw();
 
             debugDraw.SetSprite(document.getElementById('canvas').getContext('2d'));
-            debugDraw.SetDrawScale(1);
-            debugDraw.SetFillAlpha(1);
+            debugDraw.SetDrawScale(SCALE);
+            debugDraw.SetFillAlpha(0.2);
             debugDraw.SetLineThickness(2.0);
             debugDraw.SetFlags(Box2D.Dynamics.b2DebugDraw.e_shapeBit | Box2D.Dynamics.b2DebugDraw.e_jointBit);
 
@@ -91,32 +93,40 @@ angular.module('badgrades')
             bodyDef.type = Box2D.Dynamics.b2Body.b2_staticBody;
 
             fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape();
-            fixDef.shape.SetAsBox(600, 25);
+            fixDef.shape.SetAsBox(600 / SCALE, 25 / SCALE);
 
             // Bottom
-            bodyDef.position.x = 600;
-            bodyDef.position.y = 775;
-            World.bodies.push(World.CreateBody(bodyDef).CreateFixture(fixDef));
+            bodyDef.position.x = 600 / SCALE;
+            bodyDef.position.y = 775 / SCALE;
+            World.CreateBody(bodyDef).CreateFixture(fixDef);
 
             // Top
-            bodyDef.position.x = 600;
-            bodyDef.position.y = 25;
-            var ceiling = World.CreateBody(bodyDef).CreateFixture(fixDef);
+            bodyDef.position.x = 600 / SCALE;
+            bodyDef.position.y = 25 / SCALE;
+            World.CreateBody(bodyDef).CreateFixture(fixDef);
 
             // Left
-            fixDef.shape.SetAsBox(25, 600);
+            fixDef.shape.SetAsBox(25 / SCALE, 600 / SCALE);
 
-            bodyDef.position.x = 25;
-            bodyDef.position.y = 400;
-            World.bodies.push(World.CreateBody(bodyDef).CreateFixture(fixDef));
+            bodyDef.position.x = 25 / SCALE;
+            bodyDef.position.y = 400 / SCALE;
+            World.CreateBody(bodyDef).CreateFixture(fixDef);
 
             // Right
-            bodyDef.position.x = 1175;
-            bodyDef.position.y = 400;
-            World.bodies.push(World.CreateBody(bodyDef).CreateFixture(fixDef));
+            bodyDef.position.x = 1175 / SCALE;
+            bodyDef.position.y = 400 / SCALE;
+            World.CreateBody(bodyDef).CreateFixture(fixDef);
 
-            Chain(300, 200, 10, 40, 20);
+            Chain(300,
+                200,
+                10,
+                20,
+                10);
 
+            World.createBox(400 / SCALE,
+                400 / SCALE,
+                50 / SCALE,
+                50 / SCALE);
 
             return this;
         };

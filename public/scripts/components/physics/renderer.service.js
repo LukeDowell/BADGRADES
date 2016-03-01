@@ -2,7 +2,7 @@
  * Created by ldowell on 2/29/16.
  */
 angular.module('badgrades')
-    .factory('PixiRenderer', function(World) {
+    .factory('PixiRenderer', function() {
 
         /**
          * Creates a new PIXIJS renderer. An appropriate drawing

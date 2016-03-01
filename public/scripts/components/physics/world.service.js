@@ -3,10 +3,10 @@
  */
 
 angular.module('badgrades')
-    .factory('World', function() {
+    .factory('World', function(PixiRenderer) {
 
         /** Gravity vector */
-        var GRAVITY = new Box2D.Common.Math.b2Vec2(0.0, -10.0);
+        var GRAVITY = new Box2D.Common.Math.b2Vec2(0.0, 10.0);
 
         var instance = null;
 
@@ -46,8 +46,20 @@ angular.module('badgrades')
         World.prototype = new Box2D.Dynamics.b2World(GRAVITY, true);
         var proto = World.prototype;
 
-        proto.addActor = function(id, actor) {
-            this.actors[id] = actor;
+        proto.createBox = function(x, y, width, height) {
+            var fixDef = new Box2D.Dynamics.b2FixtureDef();
+            fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape();
+            fixDef.shape.SetAsBox(width / 2, height / 2);
+
+            var bodyDef = new Box2D.Dynamics.b2BodyDef();
+            bodyDef.position.x = x;
+            bodyDef.position.y = y;
+            bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
+
+            var body = this.CreateBody(bodyDef);
+            body.CreateFixture(fixDef);
+
+            return body;
         };
 
         function getInstance() {
