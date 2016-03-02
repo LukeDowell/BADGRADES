@@ -123,7 +123,7 @@ angular.module('badgrades')
             fixDef = new Box2D.Dynamics.b2FixtureDef();
             fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape();
             fixDef.shape.SetAsBox(700 / 2 / SCALE, 400 / 2 / SCALE);
-            fixDef.density = 1;
+            fixDef.density = 0.5;
 
             var blackboardBody = World.CreateBody(bodyDef);
             blackboardBody.CreateFixture(fixDef);

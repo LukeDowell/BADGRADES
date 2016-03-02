@@ -110,8 +110,8 @@ angular.module('badgrades')
         var mousePressed = false;
 
         proto.onMouseMove = function( event ) {
-            var x = event.pageX / this.SCALE;
-            var y = event.pageY / this.SCALE;
+            var x = event.x / this.SCALE;
+            var y = event.y / this.SCALE;
 
             var point = new Box2D.Common.Math.b2Vec2(x, y);
 
