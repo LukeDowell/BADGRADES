@@ -91,9 +91,9 @@ angular.module('badgrades')
             ////////////
 
             var fixDef = new Box2D.Dynamics.b2FixtureDef();
-            fixDef.density = 200;
-            fixDef.friction = 25;
-            fixDef.restitution = 10;
+            fixDef.density = 1;
+            fixDef.friction = 1;
+            fixDef.restitution = 0.5;
 
             var bodyDef = new Box2D.Dynamics.b2BodyDef();
             bodyDef.type = Box2D.Dynamics.b2Body.b2_staticBody;
@@ -123,7 +123,7 @@ angular.module('badgrades')
             fixDef = new Box2D.Dynamics.b2FixtureDef();
             fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape();
             fixDef.shape.SetAsBox(700 / 2 / SCALE, 400 / 2 / SCALE);
-            fixDef.density = 10;
+            fixDef.density = 1;
 
             var blackboardBody = World.CreateBody(bodyDef);
             blackboardBody.CreateFixture(fixDef);
@@ -152,6 +152,8 @@ angular.module('badgrades')
             var rightChainCeilingAnchor = new Box2D.Common.Math.b2Vec2(300 / SCALE, 25 / SCALE);
             var rightChainBoardAnchor = new Box2D.Common.Math.b2Vec2(900 / SCALE, 110 / SCALE);
             Chain(300, 50, ceiling, rightChainCeilingAnchor, blackboardBody, rightChainBoardAnchor);
+
+            console.log(blackboardBody);
 
             return this;
         };

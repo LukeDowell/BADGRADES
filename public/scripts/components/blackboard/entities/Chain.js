@@ -25,9 +25,9 @@ angular.module('badgrades')
             var fixDef = new Box2D.Dynamics.b2FixtureDef();
             fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape();
             fixDef.shape.SetAsBox(linkWidth / 2 / SCALE, linkLength / 2 / SCALE);
-            fixDef.density = 100;
+            fixDef.density = 10;
             fixDef.friction = 1;
-            fixDef.restitution = 2;
+            fixDef.restitution = 1;
 
             // Create the first body
             var link = startBody;
