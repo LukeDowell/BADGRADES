@@ -22,7 +22,7 @@ angular.module('badgrades')
              * be very big. 30 pixels = 1 meter
              * @type {number}
              */
-            this.SCALE = 50;
+            this.SCALE = 30;
 
             /**
              * Visual elements associated with this world. Accessed by
@@ -44,30 +44,11 @@ angular.module('badgrades')
              */
             this.interactive = true;
 
-            this.init();
         };
 
-        /*
-         * Extend box2d world
-         */
+        // extend b2world
         World.prototype = new Box2D.Dynamics.b2World(GRAVITY, true);
         var proto = World.prototype;
-
-        /**
-         *
-         */
-        proto.init = function() {
-
-            this.setupHandlers();
-        };
-
-        /**
-         *
-         * @returns {proto}
-         */
-        proto.setupHandlers = function() {
-            return this;
-        };
 
         /**
          *
@@ -100,51 +81,6 @@ angular.module('badgrades')
             return body;
         };
 
-        //////////////////////////
-        // MOUSE JOINT SHIT
-        //////////////////////////
-        // TODO probably should be in blackboard.js
-        // http://www.binarytides.com/mouse-joint-box2d-javascript/
-
-        var mouseJoint = undefined;
-        var mousePressed = false;
-
-        proto.onMouseMove = function( event ) {
-            var x = event.x / this.SCALE;
-            var y = event.y / this.SCALE;
-
-            var point = new Box2D.Common.Math.b2Vec2(x, y);
-
-            if(mousePressed && !mouseJoint) {
-                var body = this.getBodyAtMouse(x, y);
-
-                if(body) {
-                    var jointDef = this.createMouseJointDef(this.bodies[0], body, point);
-                    mouseJoint = this.CreateJoint(jointDef);
-                    body.SetAwake(true);
-                }
-            }
-
-            if(mouseJoint) {
-                console.log(mouseJoint);
-                console.log(event);
-                mouseJoint.SetTarget(point);
-            }
-        };
-
-        proto.onMouseUp = function( event ) {
-            mousePressed = false;
-
-            if(mouseJoint) {
-                this.DestroyJoint(mouseJoint);
-                mouseJoint = false;
-            }
-        };
-
-        proto.onMouseDown = function( event ) {
-            mousePressed = true;
-        };
-
         /**
          * @param ground
          * @param body
@@ -165,11 +101,11 @@ angular.module('badgrades')
         };
 
         /**
-         *
+         * TODO Not accurate, slightly off
          * @param x
          * @param y
          */
-        proto.getBodyAtMouse = function(x, y) {
+        proto.getBodyAtPoint = function(x, y) {
             var mouse_p = new Box2D.Common.Math.b2Vec2(x, y);
             var aabb = new Box2D.Collision.b2AABB();
 
@@ -198,8 +134,6 @@ angular.module('badgrades')
             }
 
             this.QueryAABB(GetBodyCallback, aabb);
-
-            console.log(body);
             return body;
         };
 
