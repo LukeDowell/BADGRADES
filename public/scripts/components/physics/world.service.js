@@ -22,7 +22,7 @@ angular.module('badgrades')
              * be very big. 30 pixels = 1 meter
              * @type {number}
              */
-            this.SCALE = 30;
+            this.SCALE = 40;
 
             /**
              * Visual elements associated with this world. Accessed by
