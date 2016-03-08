@@ -1326,7 +1326,7 @@
 // resolves . and .. elements in a path array with directory names there
 // must be no slashes, empty elements, or device names (c:\) in the array
 // (so also no leading and trailing slashes - it does not distinguish
-// relative and absolute paths)
+// relative and absolute path)
         function normalizeArray(parts, allowAboveRoot) {
             // if the path tries to go above the root, `up` ends up > 0
             var up = 0;
@@ -1382,7 +1382,7 @@
             }
 
             // At this point the path should be resolved to a full absolute path, but
-            // handle relative paths to be safe (might happen when process.cwd() fails)
+            // handle relative path to be safe (might happen when process.cwd() fails)
 
             // Normalize the path
             resolvedPath = normalizeArray(filter(resolvedPath.split('/'), function(p) {

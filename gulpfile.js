@@ -5,43 +5,46 @@
 
 var gulp = require('gulp');
 var inject = require('gulp-inject');
+var sass = require('gulp-sass');
 var angularFilesort = require('gulp-angular-filesort');
 
-var paths = {
+var path = {
     index: './public/index.html',
     styles: [
         './public/stylesheets/**/*.css',
         './public/bower_components/angular-material/angular-material.css'],
+    sass: [
+        './public/stylesheets/**/*.scss',
+        './public/scripts/**/*.scss'],
     scripts: [
         './public/scripts/app/**/*.js',
         './public/scripts/components/**/*.js',
         './public/scripts/vendors/**/*.js']
 };
 
+gulp.task('sass', function() {
+    return gulp.src(path.sass)
+        .pipe(sass().on('error', sass.logError))
+        .pipe(gulp.dest('./public/stylesheets'));
+});
+
 gulp.task('watch', function() {
-    gulp.watch(paths.scripts, ['scripts']);
-    gulp.watch(paths.styles, ['styles']);
-});
-
-gulp.task('scripts', function() {
-
-});
-
-gulp.task('styles', function() {
-
+    gulp.watch(path.scripts, ['scripts']);
+    gulp.watch(path.sass, ['sass']);
+    gulp.watch(path.styles, ['styles']);
 });
 
 gulp.task('wiredep', function() {
 
     // Bower components
     require('wiredep')({
-        src: paths.index
+        src: path.index
     });
 
     // Styles
-    gulp.src(paths.index)
+    gulp.src(path.index)
         .pipe(inject(
-            gulp.src(paths.styles),
+            gulp.src(path.styles),
             {
                 relative: true
             }
@@ -49,9 +52,9 @@ gulp.task('wiredep', function() {
         .pipe(gulp.dest('public'));
 
     // App and angular
-    gulp.src(paths.index)
+    gulp.src(path.index)
         .pipe(inject(
-            gulp.src(paths.scripts).pipe(angularFilesort()),
+            gulp.src(path.scripts).pipe(angularFilesort()),
             {
                 relative: true
             }
